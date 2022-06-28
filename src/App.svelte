@@ -3,6 +3,3 @@
 </script>
 
 <Layout />
-
-<style>
-</style>
