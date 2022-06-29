@@ -43,17 +43,19 @@
 		}
 	};
 
-	let userInfo = {};
+	let userInfo = {
+		username: "",
+		pfp: "",
+		state: "",
+	};
 	onAuthStateChanged(auth, async (user) => {
 		if (user) {
 			const docRef = doc(db, "users", `${user.uid}`);
-			const docSnap = await getDoc(docRef);
-
-			if (docSnap.exists()) {
-				userInfo = docSnap.data();
-				console.log(docSnap.data());
-				console.log(userInfo);
-			}
+			onSnapshot(docRef, (snapshot) => {
+				userInfo.pfp = snapshot.data().pfp;
+				userInfo.username = snapshot.data().username;
+				userInfo.state = snapshot.data().state;
+			});
 		}
 	});
 </script>
@@ -62,7 +64,7 @@
 	<div class="container">
 		<div class="profile">
 			<h1>Bem vindo, {userInfo.username}</h1>
-			<img src={userInfo.pfp} alt="" />
+			<img src={userInfo.pfp} alt="" style="border-radius: 10px" />
 			<h3>{userInfo.state}</h3>
 		</div>
 		<div class="createGroup">
@@ -97,13 +99,10 @@
 {/if}
 
 <style>
-	.profile
-	{
-		margin-left: 1rem;	
-
+	.profile {
+		margin-left: 1rem;
 	}
-	.createGroup
-	{
+	.createGroup {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -111,7 +110,6 @@
 	.container {
 		display: flex;
 		gap: 5rem;
-
 	}
 	button {
 		border-radius: 0.3rem;
