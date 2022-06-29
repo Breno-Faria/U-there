@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { FirebaseError } from "firebase/app";
-	
 
 	import { getAuth, onAuthStateChanged } from "firebase/auth";
 	import {
@@ -136,8 +135,10 @@
 		await updateDoc(dbRef, {
 			admins: arrayUnion(`${memberEmail}`),
 		});
+		await updateDoc(dbRef, {
+			users: arrayUnion(`${memberEmail}`),
+		});
 		memberEmail = "";
-		console.log("admin added");
 	};
 
 	const rmAdmHandler = async () => {
@@ -199,7 +200,19 @@
 	setTimeout(() => {
 		let view = document.getElementById("view");
 		view.scrollIntoView({ behavior: "smooth" });
-	}, 1000)
+	}, 1000);
+
+	const exitGroup = async () => {
+		const auth = getAuth();
+		const user = auth.currentUser;
+		const dbRef = doc(db, "groups", `${id}`);
+		await updateDoc(dbRef, {
+			users: arrayRemove(user.email),
+		});
+		await updateDoc(dbRef, {
+			admins: arrayRemove(user.email),
+		});
+	};
 </script>
 
 {#if $isLoggedIn}
@@ -230,6 +243,7 @@
 			</form>
 		</div>
 		<div class="container">
+			<button on:click={exitGroup}>Sair do gupo</button>
 			{#if isAdmin}
 				<div id="adminTools">
 					<h3>Ferramentas de administrador</h3>
@@ -336,6 +350,7 @@
 		padding: 1rem;
 		justify-content: space-between;
 		gap: 1rem;
+		width: 40vh;
 	}
 
 	.form {
@@ -345,7 +360,6 @@
 	}
 
 	.message {
-		display: flex;
 		align-items: center;
 		gap: 5px;
 		margin: 0.5rem;
@@ -364,8 +378,9 @@
 	#main {
 		display: flex;
 		gap: 5rem;
-		align-items: flex-start;
+		align-items: center;
 		flex-wrap: wrap;
+		justify-content: center;
 	}
 
 	#adminTools h3 {
