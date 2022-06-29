@@ -194,6 +194,11 @@
 		let view = document.getElementById("view");
 		view.scrollIntoView({ behavior: "smooth" });
 	};
+
+	setTimeout(() => {
+		let view = document.getElementById("view");
+		view.scrollIntoView({ behavior: "smooth" });
+	}, 1000)
 </script>
 
 {#if $isLoggedIn}

@@ -63,7 +63,7 @@
 {#if $isLoggedIn}
 	<div class="container">
 		<div class="profile">
-			<h1>Bem vindo, {userInfo.username}</h1>
+			<h1>Bem-vindo, {userInfo.username}</h1>
 			<img src={userInfo.pfp} alt="" style="border-radius: 10px" />
 			<h3>{userInfo.state}</h3>
 		</div>

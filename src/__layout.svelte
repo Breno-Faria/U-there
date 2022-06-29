@@ -149,9 +149,9 @@
 			<nav class="header">
 				<img alt="Logo" src="/icon.png" />
 				{#if !$isLoggedIn}
-					<button on:click={googleLogin}>Log in with Google</button>
+					<button on:click={googleLogin}>Log-in com Google</button>
 					<button on:click={facebookLogin}
-						>Log in with Facebook</button
+						>Log-in com Facebook</button
 					>
 				{/if}
 
