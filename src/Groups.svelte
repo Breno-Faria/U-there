@@ -172,7 +172,7 @@
 		query(
 			collection(db, "messages"),
 			where("group", "==", id),
-			orderBy("createdAt"),
+			orderBy("createdAt", "desc"),
 			limit(25)
 		),
 		(snapshot) => {
@@ -363,6 +363,7 @@
 		align-items: center;
 		gap: 5px;
 		margin: 0.5rem;
+		word-wrap:break-word;
 	}
 
 	.msgpfp {
