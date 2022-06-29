@@ -42,47 +42,9 @@
 			creatingGroup = true;
 		}
 	};
-
-	const disponivelChangeState = async () => {
-		const auth = getAuth();
-		const user = auth.currentUser;
-		const userInfo = doc(db, "users", `${user.uid}`);
-		await updateDoc(userInfo, {
-			state: "Disponivel",
-		});
-	};
-	const ocupadoChangeState = async () => {
-		const auth = getAuth();
-		const user = auth.currentUser;
-		const userInfo = doc(db, "users", `${user.uid}`);
-		await updateDoc(userInfo, {
-			state: "Ocupado",
-		});
-	};
-	const offlineChangeState = async () => {
-		const auth = getAuth();
-		const user = auth.currentUser;
-		const userInfo = doc(db, "users", `${user.uid}`);
-		await updateDoc(userInfo, {
-			state: "Offline",
-		});
-	};
-	const feriasChangeState = async () => {
-		const auth = getAuth();
-		const user = auth.currentUser;
-		const userInfo = doc(db, "users", `${user.uid}`);
-		await updateDoc(userInfo, {
-			state: "De férias 🌴🥳🎉",
-		});
-	};
 </script>
 
 {#if $isLoggedIn}
-	<button on:click={disponivelChangeState}>Disponível</button>
-	<button on:click={ocupadoChangeState}>Ocupado</button>
-	<button on:click={offlineChangeState}>Offline</button>
-	<button on:click={feriasChangeState}>De férias 🌴🥳🎉</button>
-	<br /><br />
 	{#if !creatingGroup}
 		<button on:click={creatingGroupHandler}>Criar novo grupo</button>
 	{/if}

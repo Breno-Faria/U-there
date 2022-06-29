@@ -25,9 +25,9 @@
 		getDoc,
 		setDoc,
 	} from "firebase/firestore";
-	import { writable } from 'svelte/store';
-	import { isLoggedIn } from './stores';
-	
+	import { writable } from "svelte/store";
+	import { isLoggedIn } from "./stores";
+
 	let groups: any = [];
 	const auth = getAuth();
 	onAuthStateChanged(auth, async (user) => {
@@ -103,8 +103,44 @@
 			.catch((error) => {
 				console.log(error);
 			});
+		navigate("/");
 	};
 
+	const disponivelChangeState = async () => {
+		const auth = getAuth();
+		const user = auth.currentUser;
+		const userInfo = doc(db, "users", `${user.uid}`);
+		await updateDoc(userInfo, {
+			state: "Disponivel",
+		});
+	};
+	const ocupadoChangeState = async () => {
+		const auth = getAuth();
+		const user = auth.currentUser;
+		const userInfo = doc(db, "users", `${user.uid}`);
+		await updateDoc(userInfo, {
+			state: "Ocupado",
+		});
+	};
+	const offlineChangeState = async () => {
+		const auth = getAuth();
+		const user = auth.currentUser;
+		const userInfo = doc(db, "users", `${user.uid}`);
+		await updateDoc(userInfo, {
+			state: "Offline",
+		});
+	};
+	const feriasChangeState = async () => {
+		const auth = getAuth();
+		const user = auth.currentUser;
+		const userInfo = doc(db, "users", `${user.uid}`);
+		await updateDoc(userInfo, {
+			state: "De férias 🌴🥳🎉",
+		});
+	};
+
+	
+	const user = auth.currentUser;
 </script>
 
 <body style="margin: 0;">
@@ -120,19 +156,45 @@
 				{/if}
 
 				{#if $isLoggedIn}
-					<button on:click={signOutHandler}>Sign out</button>
-					<Link to="/">Home</Link>
+
+					<div class="options">
+						<button on:click={signOutHandler}>Sign out</button>
+						<Link to="/"><button id="home">Home</button></Link>
+					</div>
+					<div class="states">
+						<button on:click={disponivelChangeState}
+							>Disponível</button
+						>
+						<button on:click={ocupadoChangeState}>Ocupado</button>
+						<button on:click={offlineChangeState}>Offline</button>
+						<button on:click={feriasChangeState}
+							>De férias 🌴🥳🎉</button
+						>
+					</div>
 					{#each groups as group}
-						<div class="group">
+						{#if group.groupImage != ""}
 							<a href="/groups/{group.id}">
-								<img
-									class="pfp"
-									src={group.groupImage}
-									alt="group icon"
-								/>
-								<p>{group.groupName}</p>
+								<div class="group">
+									<img
+										class="pfp"
+										src={group.groupImage}
+										alt="group icon"
+									/>
+									<p>{group.groupName}</p>
+								</div>
 							</a>
-						</div>
+						{:else}
+							<a href="/groups/{group.id}">
+								<div class="group">
+									<img
+										class="pfp"
+										src="/defaultgroup.png"
+										alt="group icon"
+									/>
+									<p>{group.groupName}</p>
+								</div>
+							</a>
+						{/if}
 					{/each}
 				{/if}
 			</nav>
@@ -145,31 +207,61 @@
 <slot />
 
 <style>
-	.header
-	{
+	.group p {
+		margin: 0;
+	}
+
+	.group {
 		display: flex;
-		gap: 30px;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		font-size: x-large;
+	}
+	:global(a) {
+		text-decoration: none;
+		color: black;
+	}
+	#home {
+		width: 5rem;
+	}
+	button {
+		border-radius: 0.3rem;
+		background-color: #a81d4d;
+		color: white;
+		font-weight: bold;
+	}
+	.states {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+	}
+	.options {
+		display: flex;
+		flex-direction: column;
+	}
+	.header {
+		display: flex;
+		gap: 2rem;
 		justify-content: flex-start;
 		align-items: center;
+		padding: 1rem;
 	}
 	.pfp {
-		width: 50px;
-		height: 50px;
+		width: 100px;
+		height: auto;
+		max-height: 150px;
 	}
 	:global(body) {
 		margin: 0;
+		background-color: #94dee2;
 	}
 	img {
-		width: 100px;
+		width: 150px;
 		height: auto;
 	}
 
 	nav {
-		background-color: pink;
-	}
-	button {
-		padding: 0;
-		background: none;
-		border: none;
+		background-color: #f18db5;
 	}
 </style>
