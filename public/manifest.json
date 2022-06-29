@@ -1,0 +1,13 @@
+{
+	"name": "You There?",
+	"icons": [
+		{
+			"src": "/mainicon.png",
+			"sizes": "512x512"
+		}
+	],
+	"start_url": "/index.html",
+	"display": "standalone",
+	"theme_color": "#a81d4d",
+	"background_color": "#94dee2"
+}
