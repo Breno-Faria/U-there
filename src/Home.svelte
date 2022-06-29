@@ -99,17 +99,17 @@
 {/if}
 
 <style>
-	.profile {
-	}
 	.createGroup {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		justify-content: center;
+		gap: 1rem;
 	}
 	.container {
 		display: flex;
 		gap: 5rem;
 		margin: 0 1rem;
+		flex-wrap: wrap;
 	}
 	button {
 		border-radius: 0.3rem;
