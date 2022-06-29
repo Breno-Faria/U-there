@@ -67,7 +67,7 @@
 					await setDoc(doc(usersRef, `${user.uid}`), {
 						email: `${user.email}`,
 						pfp: `${user.photoURL}`,
-						state: "online",
+						state: "🟢 Disponivel",
 						username: `${user.displayName}`,
 					});
 				} catch (error) {
