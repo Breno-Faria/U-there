@@ -1,6 +1,9 @@
 <script lang="ts">
+	import { FirebaseError } from "firebase/app";
+
 	import { getAuth, onAuthStateChanged } from "firebase/auth";
 	import {
+		addDoc,
 		arrayRemove,
 		arrayUnion,
 		collection,
@@ -13,6 +16,9 @@
 		setDoc,
 		updateDoc,
 		where,
+		serverTimestamp,
+		orderBy,
+		limit,
 	} from "firebase/firestore";
 	import { navigate } from "svelte-navigator";
 	import { db, auth } from "./db";
@@ -130,7 +136,7 @@
 			admins: arrayUnion(`${memberEmail}`),
 		});
 		memberEmail = "";
-		console.log("admin added")
+		console.log("admin added");
 	};
 
 	const rmAdmHandler = async () => {
@@ -157,99 +163,203 @@
 		memberEmail = "";
 	};
 
+	let message = "";
+	let messages: any = [];
 
+	onSnapshot(
+		query(
+			collection(db, "messages"),
+			where("group", "==", id),
+			orderBy("createdAt"),
+			limit(25)
+		),
+		(snapshot) => {
+			messages = snapshot.docs.map((doc) => {
+				return { ...doc.data() };
+			});
+		}
+	);
+	const sendMessage = async () => {
+		const auth = getAuth();
+		const user = auth.currentUser;
+		const messagesRef = collection(db, "messages");
+		await addDoc(messagesRef, {
+			text: `${message}`,
+			createdAt: serverTimestamp(),
+			group: id,
+			pfp: user.photoURL,
+			username: user.displayName,
+		});
+		message = "";
+		let view = document.getElementById("view");
+		view.scrollIntoView({ behavior: "smooth" });
+	};
 </script>
-{#if $isLoggedIn}
-	<div class="container">
-		{#if isAdmin}
-			<div id="adminTools">
-				<h3>Ferramentas de administrador</h3>
-				<div class="btnGroup">
-					<button on:click={toggleAddMember}>Adicionar um novo membro</button>
-					<button on:click={toggleRemoveMember}
-						>Remover um membro</button
-					>
-					<button on:click={toggleRemoveGroup}
-						>Excluir o grupo</button
-					>
-					<button on:click={toggleAddadm}
-					>Adicionar um administrador</button>
-					<button on:click={togglermAdm}
-					>Remover um administrador</button>
-				</div>
-				{#if addMember}
-					<form on:submit|preventDefault={addMemberHandler}>
-						<label for="">Email</label>
-						<input
-							bind:value={memberEmail}
-							placeholder="example@gmail.com"
-							type="email"
-							multiple
-							required
-						/>
-						<button type="submit">Adicionar membro</button>
-					</form>
-				{/if}
-				{#if removeMember}
-					<form on:submit|preventDefault={removeMemberHandler}>
-						<label for="">Email</label>
-						<input
-							bind:value={memberEmail}
-							type="email"
-							multiple
-							required
-							placeholder="example@gmail.com"
-						/>
-						<button type="submit">Remover membro</button>
-					</form>
-				{/if}
-				{#if addAdm}
-				<form on:submit|preventDefault={addAdmHandler}>
-					<label for="">Email</label>
-					<input
-						bind:value={memberEmail}
-						placeholder="example@gmail.com"
-						type="email"
-						multiple
-						required
-					/>
-					<button type="submit">Adicionar administrador</button>
-				</form>
-				{/if}
-				{#if rmAdm}
-				<form on:submit|preventDefault={rmAdmHandler}>
-					<label for="">Email</label>
-					<input
-						bind:value={memberEmail}
-						placeholder="example@gmail.com"
-						type="email"
-						multiple
-						required
-					/>
-					<button type="submit">Remover administrador</button>
-				</form>
-				{/if}
-				{#if removeGroup}
-					<button on:click={removeGroupHandler}
-						>Excluir grupo (AÇÃO PERMANENTE)</button
-					>
-				{/if}
-			</div>
-		{/if}
 
-		<div class="users">
-			{#each userObjects as user}
-				<div class="user">
-					<img src={user.pfp} alt="Profile picture" />
-					<p>{user.username}</p>
-					<p id="state">{user.state}</p>
+{#if $isLoggedIn}
+	<div id="main">
+		<div class="message-box">
+			<div class="messages">
+				{#each messages as message}
+					<div class="message">
+						<img
+							src={message.pfp}
+							alt=""
+							class="msgpfp"
+							style="height: 30px; width: 30px;"
+						/>
+						<p>{message.text}</p>
+					</div>
+				{/each}
+				<div id="view" />
+			</div>
+			<form class="form" on:submit|preventDefault={sendMessage}>
+				<input
+					bind:value={message}
+					type="text"
+					required
+					maxlength="50"
+				/>
+				<button type="submit">Enviar</button>
+			</form>
+		</div>
+		<div class="container">
+			{#if isAdmin}
+				<div id="adminTools">
+					<h3>Ferramentas de administrador</h3>
+					<div class="btnGroup">
+						<button on:click={toggleAddMember}
+							>Adicionar um novo membro</button
+						>
+						<button on:click={toggleRemoveMember}
+							>Remover um membro</button
+						>
+						<button on:click={toggleRemoveGroup}
+							>Excluir o grupo</button
+						>
+						<button on:click={toggleAddadm}
+							>Adicionar um administrador</button
+						>
+						<button on:click={togglermAdm}
+							>Remover um administrador</button
+						>
+					</div>
+					{#if addMember}
+						<form on:submit|preventDefault={addMemberHandler}>
+							<label for="">Email</label>
+							<input
+								bind:value={memberEmail}
+								placeholder="example@gmail.com"
+								type="email"
+								multiple
+								required
+							/>
+							<button type="submit">Adicionar membro</button>
+						</form>
+					{/if}
+					{#if removeMember}
+						<form on:submit|preventDefault={removeMemberHandler}>
+							<label for="">Email</label>
+							<input
+								bind:value={memberEmail}
+								type="email"
+								multiple
+								required
+								placeholder="example@gmail.com"
+							/>
+							<button type="submit">Remover membro</button>
+						</form>
+					{/if}
+					{#if addAdm}
+						<form on:submit|preventDefault={addAdmHandler}>
+							<label for="">Email</label>
+							<input
+								bind:value={memberEmail}
+								placeholder="example@gmail.com"
+								type="email"
+								multiple
+								required
+							/>
+							<button type="submit"
+								>Adicionar administrador</button
+							>
+						</form>
+					{/if}
+					{#if rmAdm}
+						<form on:submit|preventDefault={rmAdmHandler}>
+							<label for="">Email</label>
+							<input
+								bind:value={memberEmail}
+								placeholder="example@gmail.com"
+								type="email"
+								multiple
+								required
+							/>
+							<button type="submit">Remover administrador</button>
+						</form>
+					{/if}
+					{#if removeGroup}
+						<button on:click={removeGroupHandler}
+							>Excluir grupo (AÇÃO PERMANENTE)</button
+						>
+					{/if}
 				</div>
-			{/each}
+			{/if}
+
+			<div class="users">
+				{#each userObjects as user}
+					<div class="user">
+						<img src={user.pfp} alt="Profile picture" />
+						<p>{user.username}</p>
+						<p id="state">{user.state}</p>
+					</div>
+				{/each}
+			</div>
 		</div>
 	</div>
 {/if}
 
 <style>
+	.message-box {
+		flex-direction: column;
+		background-color: white;
+		display: flex;
+		height: 60vh;
+		margin: 1rem;
+		border-radius: 1rem;
+		padding: 1rem;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+
+	.form {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.message {
+		display: flex;
+		align-items: center;
+		gap: 5px;
+		margin: 0.5rem;
+	}
+
+	.msgpfp {
+		border-radius: 50%;
+		height: 5px;
+	}
+
+	.messages {
+		overflow-x: hidden;
+		display: flex;
+		flex-direction: column;
+	}
+	#main {
+		display: flex;
+		gap: 5rem;
+		align-items: flex-start;
+	}
 	#adminTools h3 {
 		margin: 0;
 	}

@@ -111,7 +111,7 @@
 		const user = auth.currentUser;
 		const userInfo = doc(db, "users", `${user.uid}`);
 		await updateDoc(userInfo, {
-			state: "Disponivel",
+			state: "🟢 Disponivel",
 		});
 	};
 	const ocupadoChangeState = async () => {
@@ -119,7 +119,7 @@
 		const user = auth.currentUser;
 		const userInfo = doc(db, "users", `${user.uid}`);
 		await updateDoc(userInfo, {
-			state: "Ocupado",
+			state: "🟡 Ocupado",
 		});
 	};
 	const offlineChangeState = async () => {
@@ -127,7 +127,7 @@
 		const user = auth.currentUser;
 		const userInfo = doc(db, "users", `${user.uid}`);
 		await updateDoc(userInfo, {
-			state: "Offline",
+			state: "🔴 Offline",
 		});
 	};
 	const feriasChangeState = async () => {
@@ -143,7 +143,7 @@
 	const user = auth.currentUser;
 </script>
 
-<body style="margin: 0;">
+<body>
 	<main>
 		<Router>
 			<nav class="header">
@@ -237,6 +237,7 @@
 		gap: 0.2rem;
 	}
 	.options {
+		gap: 1rem;
 		display: flex;
 		flex-direction: column;
 	}
@@ -262,6 +263,8 @@
 	}
 
 	nav {
+		display: flex;
 		background-color: #f18db5;
+		overflow-y:hidden;
 	}
 </style>
