@@ -157,6 +157,7 @@
 		memberEmail = "";
 	};
 
+
 </script>
 {#if $isLoggedIn}
 	<div class="container">
