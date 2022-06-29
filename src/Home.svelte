@@ -100,7 +100,6 @@
 
 <style>
 	.profile {
-		margin-left: 1rem;
 	}
 	.createGroup {
 		display: flex;
@@ -110,6 +109,7 @@
 	.container {
 		display: flex;
 		gap: 5rem;
+		margin: 0 1rem;
 	}
 	button {
 		border-radius: 0.3rem;

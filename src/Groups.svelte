@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { FirebaseError } from "firebase/app";
+	
 
 	import { getAuth, onAuthStateChanged } from "firebase/auth";
 	import {
@@ -364,7 +365,9 @@
 		display: flex;
 		gap: 5rem;
 		align-items: flex-start;
+		flex-wrap: wrap;
 	}
+
 	#adminTools h3 {
 		margin: 0;
 	}
