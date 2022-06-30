@@ -193,14 +193,7 @@
 			username: user.displayName,
 		});
 		message = "";
-		let view = document.getElementById("view");
-		view.scrollIntoView({ behavior: "smooth" });
 	};
-
-	setTimeout(() => {
-		let view = document.getElementById("view");
-		view.scrollIntoView({ behavior: "smooth" });
-	}, 1000);
 
 	const exitGroup = async () => {
 		const auth = getAuth();
@@ -230,7 +223,6 @@
 						<p>{message.text}</p>
 					</div>
 				{/each}
-				<div id="view" />
 			</div>
 			<form class="form" on:submit|preventDefault={sendMessage}>
 				<input
@@ -332,6 +324,7 @@
 						<img src={user.pfp} alt="Profile picture" />
 						<p>{user.username}</p>
 						<p id="state">{user.state}</p>
+						<button on:click={() => navigate(`https://wa.me/${user.number}`)}>Iniciar conversa no whatsapp</button>
 					</div>
 				{/each}
 			</div>

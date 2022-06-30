@@ -69,6 +69,7 @@
 						pfp: `${user.photoURL}`,
 						state: "🟢 Disponivel",
 						username: `${user.displayName}`,
+						number: `${user.phoneNumber}`
 					});
 				} catch (error) {
 					console.log(error);

@@ -58,6 +58,17 @@
 			});
 		}
 	});
+
+	let number = "";
+	const addPhoneNumber = async () => {
+		const auth = getAuth();
+		const user = auth.currentUser;
+		const userInfo = doc(db, "users", `${user.uid}`);
+		await updateDoc(userInfo, {
+			number: `${number}`,
+		});
+		number = "";
+	};
 </script>
 
 {#if $isLoggedIn}
@@ -66,6 +77,17 @@
 			<h1>Bem-vindo, {userInfo.username}</h1>
 			<img src={userInfo.pfp} alt="" style="border-radius: 10px" />
 			<h3>{userInfo.state}</h3>
+			<br />
+			<form on:submit|preventDefault={addPhoneNumber}>
+				<h4>Adicione/atualize seu número de telefone!</h4>
+				<p>
+					Para que outros membros do grupo possam iniciar conversas no
+					Whatsapp, é preciso adicionar o seu numero de telefone.
+					Remova todos os s ímbolos, e insira apenas os algarismos,
+					includindo o DDD no formato: 21888888888
+				</p>
+				<input bind:value={number} type="number" /> <button type="submit">Confirmar</button>
+			</form>
 		</div>
 		<div class="createGroup">
 			{#if !creatingGroup}
@@ -99,6 +121,16 @@
 {/if}
 
 <style>
+	input[type="number"]::-webkit-inner-spin-button,
+	input[type="number"]::-webkit-outer-spin-button {
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+	}
+	.profile {
+		max-width: 30vw;
+	}
+
 	.createGroup {
 		display: flex;
 		align-items: flex-start;
