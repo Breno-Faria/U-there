@@ -8,27 +8,6 @@
   </p>
 </div>
 
-## Table of Contents
-
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#key-features">Key Features</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-  </ol>
-</details>
-
 ## About The Project
 
 U-There is a Progressive Web Application (PWA) built with Svelte and Firebase that allows users to create groups and indicate their online/offline status. This facilitates communication and coordination within teams. The application leverages Firestore (NoSQL) for data storage and real-time updates.
