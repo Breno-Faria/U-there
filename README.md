@@ -1,13 +1,3 @@
-<div align="center">
-<h3 align="center">U-There</h3>
-
-  <p align="center">
-    A PWA for creating groups and indicating online/offline status.
-    <br />
-     <a href="https://u-there.web.app">u-there.web.app</a>
-  </p>
-</div>
-
 ## About The Project
 
 U-There is a Progressive Web Application (PWA) built with Svelte and Firebase that allows users to create groups and indicate their online/offline status. This facilitates communication and coordination within teams. The application leverages Firestore (NoSQL) for data storage and real-time updates.
