@@ -14,7 +14,7 @@ U-There is a Progressive Web Application (PWA) built with Svelte and Firebase th
 
 The application utilizes the following technologies:
 
-- **Frontend:** Svelte, Svelte Navigator
+- **Frontend:** Svelte
 - **Backend:** Firebase (Authentication, Firestore)
 - **PWA:** Service Worker
 - **Build Tool:** Vite
